@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Dramapic Server App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YUNPLE/DramaPic.git"
+  },
+  "keywords": [
+    "Dramapic"
+  ],
+  "author": "YeuntaekLim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YUNPLE/DramaPic/issues"
+  },
+  "homepage": "https://github.com/YUNPLE/DramaPic#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
