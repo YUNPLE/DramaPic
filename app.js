@@ -1,48 +1,44 @@
-// function helloWorld(){
-//   for(i=1 ; i<100 ; i++){
-//     if(i%3 === 0 && i%5 === 0){
-//       console.log('a');
-//     }
-//     else if(i%3 === 0){
-//       console.log('m');
-//     }
-//     else if(i%5 === 0){
-//       console.log('d');
-//     }
-//     else{
-//       console.log(i);
-//     }
-//   }
-// }
-// helloWorld();
-var express = require('express');
-var path = require('path');
-var app = express();
+var express  = require('express');
+var app      = express();
+var path     = require('path');
+var mongoose = require('mongoose');
+var session  = require('express-session');
+var flash    = require('connect-flash');
+var bodyParser     = require('body-parser');
+var methodOverride = require('method-override');
 
+// database
+mongoose.connect("mongodb://dramapidadmin:lyt0290@ds051615.mongolab.com:51615/dramapic");
+var db = mongoose.connection;
+db.once("open",function () {
+  console.log("DB connected!");
+});
+db.on("error",function (err) {
+  console.log("DB ERROR :", err);
+});
+
+// view engine
 app.set("view engine", 'ejs');
-app.use(express.static(path.join(__dirname,'/public')));
 
-var data={count:0};
+// middlewares
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
+app.use(flash());
+app.use(session({secret:'MySecret'}));
 
-app.get('/', function (req,res){
-  data.count++;
-  // res.send('Hello World');
-  res.render('main_ejs',data);
-});
-app.get('/reset', function (req,res){
-  data.count = 0;
-  res.render('main_ejs',data);
-});
-app.get('/set/count',function (req,res){
-  if(req.query.key){
-      data.count = req.query.key;
-  }
-  res.render('main_ejs',data);
-});
-app.get('/set/:num',function (req,res){
-  data.count = req.params.num;
-  res.render('main_ejs',data);
-});
+// passport
+var passport = require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
+
+// routes
+app.use('/', require('./routes/home'));
+app.use('/users', require('./routes/users'));
+app.use('/posts', require('./routes/posts'));
+
+// start server
 app.listen(3000, function(){
-  console.log('Server Started!');
+  console.log('Server On!');
 });
